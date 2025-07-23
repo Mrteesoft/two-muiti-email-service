@@ -2,7 +2,7 @@
 
 A production-ready microservice architecture for email processing with comprehensive testing capabilities.
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 This system implements a two-microservice architecture with **BullMQ** queue processing:
 
@@ -16,25 +16,25 @@ This system implements a two-microservice architecture with **BullMQ** queue pro
 
 ### Key Features
 
-- ✅ **Microservice Architecture**: Loosely coupled services
-- ✅ **BullMQ Queue System**: Advanced Redis-based job queue with retry logic
-- ✅ **Database Integration**: MongoDB with Mongoose ODM
-- ✅ **Health Monitoring**: Comprehensive health checks and status endpoints
-- ✅ **Input Validation**: Robust email and message validation with express-validator
-- ✅ **Error Handling**: Graceful error handling with exponential backoff retry
-- ✅ **Production Ready**: Docker support, logging, and monitoring
-- ✅ **Comprehensive Testing**: CLI and Postman testing suites
+-  **Microservice Architecture**: Loosely coupled services
+-  **BullMQ Queue System**: Advanced Redis-based job queue with retry logic
+-  **Database Integration**: MongoDB with Mongoose ODM
+-  **Health Monitoring**: Comprehensive health checks and status endpoints
+-  **Input Validation**: Robust email and message validation with express-validator
+-  **Error Handling**: Graceful error handling with exponential backoff retry
+-  **Production Ready**: Docker support, logging, and monitoring
+-  **Comprehensive Testing**: CLI and Postman testing suites
 
 ### BullMQ Implementation
 
-- 🚀 **Advanced Job Queue**: BullMQ for reliable message processing
-- 🔄 **Retry Logic**: Exponential backoff with up to 5 retry attempts
-- ⚡ **Concurrency**: Process up to 5 jobs simultaneously
-- 📊 **Job Management**: Automatic cleanup of completed/failed jobs
-- 🎯 **Priority Queuing**: Support for job prioritization
-- 📈 **Event Handling**: Comprehensive job lifecycle monitoring
+-  **Advanced Job Queue**: BullMQ for reliable message processing
+-  **Retry Logic**: Exponential backoff with up to 5 retry attempts
+-  **Concurrency**: Process up to 5 jobs simultaneously
+-  **Job Management**: Automatic cleanup of completed/failed jobs
+-  **Priority Queuing**: Support for job prioritization
+-  **Event Handling**: Comprehensive job lifecycle monitoring
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
