@@ -4,21 +4,35 @@ A production-ready microservice architecture for email processing with comprehen
 
 ## 🏗️ Architecture Overview
 
-This system implements a two-microservice architecture:
+This system implements a two-microservice architecture with **BullMQ** queue processing:
 
-- **Service A (API Service)**: REST API for message creation and retrieval
-- **Service B (Worker Service)**: Background worker for email processing
+- **Service A (API Service)**: REST API that creates messages and adds jobs to BullMQ queue
+- **Service B (Worker Service)**: BullMQ worker that processes email jobs from the queue
+
+### BullMQ Queue Flow
+1. **API receives request** → Saves to MongoDB → **Adds job to BullMQ queue**
+2. **BullMQ queue** → Stores job in Redis with retry logic
+3. **Worker service** → **Processes jobs from BullMQ** → Simulates email sending
 
 ### Key Features
 
 - ✅ **Microservice Architecture**: Loosely coupled services
-- ✅ **Queue-based Communication**: Redis/BullMQ for reliable message processing
-- ✅ **Database Integration**: MongoDB for persistent storage
+- ✅ **BullMQ Queue System**: Advanced Redis-based job queue with retry logic
+- ✅ **Database Integration**: MongoDB with Mongoose ODM
 - ✅ **Health Monitoring**: Comprehensive health checks and status endpoints
-- ✅ **Input Validation**: Robust email and message validation
-- ✅ **Error Handling**: Graceful error handling with retry mechanisms
+- ✅ **Input Validation**: Robust email and message validation with express-validator
+- ✅ **Error Handling**: Graceful error handling with exponential backoff retry
 - ✅ **Production Ready**: Docker support, logging, and monitoring
 - ✅ **Comprehensive Testing**: CLI and Postman testing suites
+
+### BullMQ Implementation
+
+- 🚀 **Advanced Job Queue**: BullMQ for reliable message processing
+- 🔄 **Retry Logic**: Exponential backoff with up to 5 retry attempts
+- ⚡ **Concurrency**: Process up to 5 jobs simultaneously
+- 📊 **Job Management**: Automatic cleanup of completed/failed jobs
+- 🎯 **Priority Queuing**: Support for job prioritization
+- 📈 **Event Handling**: Comprehensive job lifecycle monitoring
 
 ## 🚀 Quick Start
 
@@ -119,6 +133,7 @@ microservice/
 ├── docker-compose.yml      # Development setup
 ├── docker-compose.prod.yml # Production setup
 ├── POSTMAN_TESTING_GUIDE.md # Comprehensive Postman testing guide
+├── BULLMQ_IMPLEMENTATION.md # Detailed BullMQ implementation guide
 ├── Two-Microservice-Email-System.postman_collection.json # Postman collection
 └── README.md               # This documentation
 ```
