@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: email_system_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: email_system
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    networks:
+      - email_system_network
+
+  # Redis Cache/Queue
+  redis:
+    image: redis:7.2-alpine
+    container_name: email_system_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - email_system_network
+
+  # MongoDB Web Admin Interface
+  mongo-express:
+    image: mongo-express:latest
+    container_name: email_system_mongo_express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    depends_on:
+      - mongodb
+    networks:
+      - email_system_network
+
+  # Service A - API Service
+  service-a:
+    build:
+      context: ./service-a
+      dockerfile: Dockerfile
+    container_name: email_system_api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/email_system
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./service-a:/app
+      - /app/node_modules
+    networks:
+      - email_system_network
+    command: npm run dev
+
+  # Service B - Worker Service
+  service-b:
+    build:
+      context: ./service-b
+      dockerfile: Dockerfile
+    container_name: email_system_worker
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/email_system
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./service-b:/app
+      - /app/node_modules
+    networks:
+      - email_system_network
+    command: npm run dev
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  email_system_network:
+    driver: bridge

@@ -1,0 +1,33 @@
+{
+  "name": "microservice-email-system",
+  "version": "1.0.0",
+  "description": "Two-microservice email processing system with Node.js, TypeScript, MongoDB, and Redis",
+  "main": "index.js",
+  "scripts": {
+    "dev:api": "cd service-a && npm run dev",
+    "dev:worker": "cd service-b && npm run dev",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:worker\"",
+    "build": "npm run build:api && npm run build:worker",
+    "build:api": "cd service-a && npm run build",
+    "build:worker": "cd service-b && npm run build",
+    "start": "concurrently \"npm run start:api\" \"npm run start:worker\"",
+    "start:api": "cd service-a && npm start",
+    "start:worker": "cd service-b && npm start",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "install:all": "npm install && cd service-a && npm install && cd ../service-b && npm install"
+  },
+  "keywords": [
+    "microservice",
+    "nodejs",
+    "typescript",
+    "mongodb",
+    "redis",
+    "bullmq"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

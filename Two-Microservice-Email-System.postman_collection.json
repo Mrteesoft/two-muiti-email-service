@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Two-Microservice Email System",
+		"description": "Complete test collection for the Two-Microservice Email Processing System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "1. API Service Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is JSON', function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test('Response has success field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test('Response has service field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.service).to.eql('api-service');",
+									"});",
+									"",
+									"pm.test('Response time is acceptable', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "2. Worker Service Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is JSON', function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test('Response has success field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test('Response has worker status', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.worker).to.exist;",
+									"    pm.expect(jsonData.worker.status).to.eql('running');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "3. Worker Service Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has detailed worker info', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.worker).to.exist;",
+									"    pm.expect(jsonData.worker.memoryUsage).to.exist;",
+									"    pm.expect(jsonData.worker.pid).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/status",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["status"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Message Operations",
+			"item": [
+				{
+					"name": "4. Create Valid Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response has success field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test('Response has message data', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.exist;",
+									"    pm.expect(jsonData.data.id).to.exist;",
+									"    pm.expect(jsonData.data.email).to.eql('postman.test@example.com');",
+									"    pm.expect(jsonData.data.message).to.eql('Hello from Postman testing!');",
+									"});",
+									"",
+									"pm.test('Response time is acceptable', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"// Store message ID for later use",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.environment.set('last_message_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"postman.test@example.com\",\n    \"message\": \"Hello from Postman testing!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/messages",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["messages"]
+						}
+					}
+				},
+				{
+					"name": "5. Get All Messages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test('Response has data array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test('Response has count field', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.count).to.be.a('number');",
+									"    pm.expect(jsonData.count).to.be.at.least(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/messages",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["messages"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Validation Tests",
+			"item": [
+				{
+					"name": "6. Invalid Email Format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response has success false', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test('Response has validation errors', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.exist;",
+									"    pm.expect(jsonData.errors).to.be.an('array');",
+									"});",
+									"",
+									"pm.test('Error mentions email validation', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const emailError = jsonData.errors.find(error => error.field === 'email');",
+									"    pm.expect(emailError).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"invalid-email-format\",\n    \"message\": \"This should fail validation\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/messages",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["messages"]
+						}
+					}
+				},
+				{
+					"name": "7. Empty Message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response has success false', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test('Response has validation errors', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.exist;",
+									"});",
+									"",
+									"pm.test('Error mentions message validation', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const messageError = jsonData.errors.find(error => error.field === 'message');",
+									"    pm.expect(messageError).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"message\": \"\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/messages",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["messages"]
+						}
+					}
+				},
+				{
+					"name": "8. Missing Message Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response has success false', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test('Response has validation errors', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/messages",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["messages"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url_api",
+			"value": "http://localhost:3001",
+			"type": "string"
+		},
+		{
+			"key": "base_url_worker",
+			"value": "http://localhost:3002",
+			"type": "string"
+		}
+	]
+}
