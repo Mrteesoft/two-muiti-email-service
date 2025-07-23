@@ -11,16 +11,16 @@ This system implements a two-microservice architecture:
 
 ### Key Features
 
-- ✅ **Microservice Architecture**: Loosely coupled services
-- ✅ **Queue-based Communication**: Redis/BullMQ for reliable message processing
-- ✅ **Database Integration**: MongoDB for persistent storage
-- ✅ **Health Monitoring**: Comprehensive health checks and status endpoints
-- ✅ **Input Validation**: Robust email and message validation
-- ✅ **Error Handling**: Graceful error handling with retry mechanisms
-- ✅ **Production Ready**: Docker support, logging, and monitoring
-- ✅ **Comprehensive Testing**: CLI and Postman testing suites
+-  **Microservice Architecture**: Loosely coupled services
+-  **Queue-based Communication**: Redis/BullMQ for reliable message processing
+-  **Database Integration**: MongoDB for persistent storage
+-  **Health Monitoring**: Comprehensive health checks and status endpoints
+-  **Input Validation**: Robust email and message validation
+-  **Error Handling**: Graceful error handling with retry mechanisms
+-  **Production Ready**: Docker support, logging, and monitoring
+-  **Comprehensive Testing**: CLI and Postman testing suites
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -62,9 +62,9 @@ docker-compose -f docker-compose.prod.yml up -d
 - `GET /health` - Service health check
 - `GET /status` - Detailed service status with metrics
 
-## 🧪 Testing
+##  Testing
 
-### 📮 Postman Testing (Recommended)
+###  Postman Testing (Recommended)
 
 **Complete Postman testing guide with collection provided!**
 
@@ -78,10 +78,10 @@ docker-compose -f docker-compose.prod.yml up -d
    - Includes all test cases, expected responses, and troubleshooting
 
 3. **Test Coverage:**
-   - ✅ Health checks for both services
-   - ✅ Message creation and retrieval
-   - ✅ Input validation testing
-   - ✅ Error handling verification
+   -  Health checks for both services
+   -  message creation and retrieval
+   -  Input validation testing
+   -  Error handling verification
 
 ### Manual Testing with cURL
 
@@ -99,7 +99,7 @@ curl -X POST http://localhost:3001/messages \
 curl http://localhost:3001/messages
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 microservice/
@@ -140,7 +140,7 @@ MONGODB_URI=mongodb://localhost:27017/email_system
 REDIS_URL=redis://localhost:6379
 ```
 
-## 📊 System Monitoring
+##  System Monitoring
 
 ### Health Checks
 
@@ -163,7 +163,7 @@ npm run dev  # Shows both services with real-time processing
 docker-compose logs -f
 ```
 
-## 🚀 Production Deployment
+##  Production Deployment
 
 ### Performance Benchmarks
 
@@ -200,14 +200,14 @@ curl -X POST http://localhost:3001/messages \
 2. **Dependencies**: Run `npm install` in root directory
 3. **Database/Redis**: Services will auto-connect to local instances
 
-## 📈 Key Features
+##  Key Features
 
-- ✅ **Microservice Architecture**: Clean separation of concerns
-- ✅ **Queue-based Processing**: Reliable message handling
-- ✅ **Health Monitoring**: Built-in health checks
-- ✅ **Error Handling**: Graceful error management
-- ✅ **Docker Support**: Easy deployment
-- ✅ **Production Ready**: Scalable and maintainable
+-  **Microservice Architecture**: Clean separation of concerns
+-  **Queue-based Processing**: Reliable message handling
+-  **Health Monitoring**: Built-in health checks
+-  **Error Handling**: Graceful error management
+-  **Docker Support**: Easy deployment
+-  **Production Ready**: Scalable and maintainable
 
 ---
 
